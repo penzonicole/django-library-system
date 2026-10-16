@@ -1,57 +1,47 @@
-# 📚 Projeto 2 — Sistema de Biblioteca (Django ORM Avançado)
+# 📚 Library Management System (Django)
 
-Um sistema completo de gestão de biblioteca desenvolvido em Django 5+, demonstrando consultas avançadas com o Django ORM, agregações, buscas dinâmicas com `Q` e funcionalidades complexas de empréstimo/reserva.
+![Python](https://img.shields.io/badge/Python-3.14-3776AB?style=flat&logo=python&logoColor=white)
+![Django](https://img.shields.io/badge/Django-5.0+-092E20?style=flat&logo=django&logoColor=white)
+![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3-7952B3?style=flat&logo=bootstrap&logoColor=white)
+![Chart.js](https://img.shields.io/badge/Chart.js-4.0-FF6384?style=flat&logo=chart.js&logoColor=white)
 
----
-
-## 🚀 Funcionalidades & Destaques
-
-- **Dashboard com Agregações ORM**: Métricas calculadas via ORM (`Count`, `Avg`) exibindo total de livros, empréstimos ativos e média de avaliações.
-- **Consultas & Filtros Dinâmicos**: Busca por Título, Autor ou ISBN com `Q` objects e filtragem por Categoria.
-- **Relacionamentos Avançados**:
-  - `ForeignKey` (Autor e Leitor)
-  - `ManyToManyField` (Categorias)
-- **Desafios Extras Implementados**:
-  - ⭐ **Sistema de Avaliação (Rating)**: Nota de 1 a 5 estrelas por livro.
-  - 💰 **Cálculo de Multa por Atraso**: R$ 2,00/dia calculado automaticamente via `@property`.
-  - 🔖 **Sistema de Reserva**: Permite solicitar reservas para livros sem exemplares disponíveis.
+A feature-rich, full-stack **Library Management System** built with **Django**. The platform automates book loan tracking, member management, late return penalties, queue reservation systems, and real-time analytical dashboards.
 
 ---
 
-## 🛠️ Passo a Passo da Construção do Projeto
+## ✨ Key Features & Business Logic
 
-1. **Setup Inicial**: Criação do ambiente virtual `venv`, instalação do Django/Pillow e inicialização do app `biblioteca`.
-2. **Modelagem ORM**: Construção de `Autor`, `Categoria`, `Livro`, `Emprestimo` e `Reserva`.
-3. **Migrações e Admin**: Criação das tabelas no banco de dados e configuração do painel de administração customizado.
-4. **Views Avançadas**: Implementação do Dashboard e do Acervo com buscas inteligentes.
-5. **Interface do Usuário**: Criação dos templates com Bootstrap 5 integrando o fluxo de dados.
-
----
-
-## 🐛 Relatório de Dificuldades Encontradas & Errata
-
-Durante a construção do backend, foram contornados e resolvidos os seguintes pontos:
-
-1. **Configuração do Interpretador Python (Pylance Import Error)**:
-   - *Problema*: VS Code apresentando avisos de `could not be resolved from source`.
-   - *Solução*: Seleção explícita do interpretador `./venv/bin/python`.
-2. **Cálculo Dinâmico de Multas sem Duplicação de Dados**:
-   - *Problema*: Evitar salvar valores estáticos de multas no banco que poderiam ficar desatualizados.
-   - *Solução*: Utilização da `@property` `valor_multa` no model `Emprestimo` comparando `data_devolucao_prevista` com a data atual (`timezone.now().date()`).
+- 📖 **Catalog & Inventory Management**: Track books, authors, total copies, and real-time available stock.
+- 🔄 **Loan & Return Lifecycle**: Automated stock adjustment upon book dispatch and return.
+- 💰 **Automated Late Fine Calculation**: Dynamic assessment of overdue fines based on daily rates calculated via Django model properties.
+- 📌 **Reservation Queue System**: Enables members to join a waitlist when book stock reaches zero.
+- 🔢 **Concurrent Loan Limits**: Enforces a strict limit (maximum 3 active loans per member) to ensure fair inventory distribution.
+- 📧 **Automated Email Notifications**: Built-in `send_mail` integration to notify members on checkout and when reserved titles become available.
+- 📊 **Analytics Dashboard**: Dynamic monthly metrics rendered using **Chart.js** and Django ORM aggregation (`TruncMonth`, `annotate`, `Count`).
+- 🛠️ **Custom Django Admin**: Configured with `TabularInline` for embedded loan management inside member profiles.
 
 ---
 
-## 🖥️ Fluxo de Funcionamento da Aplicação
+## 📂 Project Architecture
 
-1. **`/` (Dashboard)**: Visualização rápida de métricas do sistema e livros recentes.
-2. **`/livros/` (Acervo)**: Interface com campo de busca e seletor de categorias.
-3. **`/livros/<id>/` (Detalhes)**: Exibição completa das informações do livro e disponibilidade.
-4. **`/admin/` (Painel Administrativo)**: Gestão de autores, livros, empréstimos e reservas.
-
----
-
-## 🌟 Diferenciais & Funcionalidades Avançadas
-
-- **Ações no Admin (`Admin Actions`)**: Devolução rápida de exemplares em lote direto pelo painel de controle.
-- **Relatório Impresso / PDF**: Emissão do acervo completo pronto para impressão ou exportação em PDF.
-- **Suíte de Testes Automatizados**: Validação das regras de negócio principais executada via `python manage.py test`.
+```text
+biblioteca_roma/
+├── manage.py
+├── requirements.txt
+├── .gitignore
+├── README.md
+├── config/                  # Django Settings & URL Routing
+│   ├── settings.py
+│   ├── urls.py
+│   └── wsgi.py
+└── biblioteca/              # Main Application App
+    ├── migrations/
+    ├── templates/
+    │   └── biblioteca/
+    │       ├── lista_livros.html
+    │       ├── meus_emprestimos.html
+    │       └── dashboard.html
+    ├── models.py            # Author, Book, Member, Loan & Reservation models
+    ├── admin.py             # Tailored Admin interface & TabularInlines
+    ├── views.py             # Business rules, queries & ORM aggregations
+    └── urls.py              # Application routes
