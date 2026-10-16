@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <title>Empréstimos de {{ membro.nome }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light p-4">
+<div class="container">
+    <a href="{% url 'lista_livros' %}" class="btn btn-outline-secondary mb-3">← Voltar ao Acervo</a>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-info">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <h2>Empréstimos de {{ membro.nome }}</h2>
+    <p class="text-muted">Email: {{ membro.email }}</p>
+
+    <ul class="list-group my-3 shadow-sm">
+    {% for emprestimo in emprestimos %}
+        <li class="list-group-item d-flex justify-content-between align-items-center py-3">
+            <div>
+                <strong>{{ emprestimo.livro.titulo }}</strong> — devolução prevista: {{ emprestimo.data_prevista_devolucao|date:"d/m/Y" }}
+                <div class="mt-1">
+                    {% if emprestimo.esta_atrasado %}
+                        <span class="badge bg-danger">Atrasado</span>
+                        <span class="badge bg-dark text-white">Multa: R$ {{ emprestimo.valor_multa }}</span>
+                    {% elif emprestimo.status == 'DEVOLVIDO' %}
+                        <span class="badge bg-success">Devolvido</span>
+                        {% if emprestimo.valor_multa > 0 %}
+                            <span class="badge bg-secondary">Multa Paga: R$ {{ emprestimo.valor_multa }}</span>
+                        {% endif %}
+                    {% else %}
+                        <span class="badge bg-warning text-dark">Em andamento</span>
+                    {% endif %}
+                </div>
+            </div>
+            {% if emprestimo.status != 'DEVOLVIDO' %}
+                <a href="{% url 'devolver_livro' emprestimo.id %}" class="btn btn-sm btn-success">Devolver Livro</a>
+            {% endif %}
+        </li>
+    {% empty %}
+        <li class="list-group-item text-muted">Nenhum empréstimo registrado para este membro.</li>
+    {% endfor %}
+    </ul>
+</div>
+</body>
+</html>

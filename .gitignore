@@ -1,0 +1,22 @@
+# Ambiente Virtual
+venv/
+.venv/
+env/
+
+# Banco de dados local
+db.sqlite3
+db.sqlite3-journal
+
+# Ficheiros compilados do Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ficheiros do sistema (macOS / Windows)
+.DS_Store
+Thumbs.db
+
+# Configurações de IDE
+.vscode/
+.idea/

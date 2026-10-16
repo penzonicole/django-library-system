@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <title>Acervo - Biblioteca</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light p-4">
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>📚 Acervo de Livros</h2>
+        <div>
+            <a href="{% url 'dashboard' %}" class="btn btn-outline-primary me-2">📊 Dashboard</a>
+            <a href="/admin/" class="btn btn-dark">Painel Admin</a>
+        </div>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-info">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Busca -->
+    <form method="GET" class="mb-4">
+        <div class="input-group">
+            <input type="text" name="q" class="form-control" placeholder="Buscar por título, autor ou ISBN..." value="{{ query }}">
+            <button type="submit" class="btn btn-primary">Buscar</button>
+        </div>
+    </form>
+
+    <!-- Cards dos Livros -->
+    <div class="row row-cols-1 row-cols-md-2 g-4 mb-5">
+        {% for livro in livros %}
+        <div class="col">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h5 class="card-title">{{ livro.titulo }}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">{{ livro.autor.nome }}</h6>
+                    <p class="card-text mb-1"><small><strong>ISBN:</strong> {{ livro.isbn }}</small></p>
+                    <p class="card-text">
+                        <span class="badge bg-info text-dark">Totais: {{ livro.copias_totais }}</span>
+                        <span class="badge {% if livro.copias_disponiveis > 0 %}bg-success{% else %}bg-danger{% endif %}">
+                            Disponíveis: {{ livro.copias_disponiveis }}
+                        </span>
+                    </p>
+
+                    {% if livro.copias_disponiveis > 0 and membros %}
+                    <form action="{% url 'emprestar_livro' livro.id %}" method="POST" class="d-flex gap-2 mt-3">
+                        {% csrf_token %}
+                        <select name="membro_id" class="form-select form-select-sm" required>
+                            <option value="">Selecione o Membro...</option>
+                            {% for membro in membros %}
+                            <option value="{{ membro.id }}">{{ membro.nome }}</option>
+                            {% endfor %}
+                        </select>
+                        <button type="submit" class="btn btn-primary btn-sm text-nowrap">Emprestar</button>
+                    </form>
+                    {% elif livro.copias_disponiveis == 0 and membros %}
+                    <form action="{% url 'reservar_livro' livro.id %}" method="POST" class="d-flex gap-2 mt-3">
+                        {% csrf_token %}
+                        <select name="membro_id" class="form-select form-select-sm" required>
+                            <option value="">Selecione o Membro...</option>
+                            {% for membro in membros %}
+                            <option value="{{ membro.id }}">{{ membro.nome }}</option>
+                            {% endfor %}
+                        </select>
+                        <button type="submit" class="btn btn-warning btn-sm text-nowrap">Reservar Livro</button>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center py-4 text-muted">Nenhum livro cadastrado. Cadastre no Admin!</div>
+        {% endfor %}
+    </div>
+
+    <!-- Relatório de Mais Emprestados -->
+    <div class="card shadow-sm border-0 p-3">
+        <h4>📊 Livros Mais Emprestados (Relatório via Annotate/Count)</h4>
+        <ul class="list-group list-group-flush mt-2">
+            {% for item in livros_mais_emprestados %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span>{{ item.titulo }} — <em>{{ item.autor.nome }}</em></span>
+                <span class="badge bg-secondary rounded-pill">{{ item.total_emprestimos }} empréstimo(s)</span>
+            </li>
+            {% empty %}
+            <li class="list-group-item text-muted">Nenhum empréstimo registrado.</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+</body>
+</html>
