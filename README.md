@@ -61,7 +61,7 @@ Below is the step-by-step application flow alongside corresponding interface scr
 > *Real-time search by title, author name, or ISBN, displaying stock availability and popular titles ranking.*
 
 <!-- ADD YOUR MAIN CATALOG SCREENSHOT HERE (lista_livros.html) -->
-![Library catalog webpage showing book listings with title, author, ISBN search, stock availability, and borrow or reserve options in a clean interface](img//Users/elenescu/Desktop/Screenshot 2026-10-16 alle 17.31.32.png800x400)
+![Library catalog page with book listings, author and ISBN details, copy availability, and checkout or reservation controls. A search field filters titles, authors, or ISBNs. The clean, neutral library-management interface presents the catalog clearly.](img/![alt text](image-2.png).png800x400)
 
 - **Workflow**: The search bar evaluates `Q(titulo__icontains=q) | Q(autor__nome__icontains=q)`. When available copies reach 0, the "Borrow" action automatically switches to "Reserve Book".
 
@@ -71,7 +71,7 @@ Below is the step-by-step application flow alongside corresponding interface scr
 > *Loan checkout interface enforcing a maximum threshold of 3 active loans per member.*
 
 <!-- ADD YOUR LOAN HISTORY OR LIMIT WARNING SCREENSHOT HERE -->
-![Library catalog page with a blue alert reading O membro Julia já atingiu o limite máximo de 3 empréstimos ativos simultâneos. Four book cards list Quando, Tudo é Rio, Suicidas, and Dias Perfeitos, with authors, ISBNs, total and available copies, and checkout controls. Tudo é Rio has zero available copies and a yellow Reservar Livro button. A search bar, Dashboard and Painel Admin buttons, and a most-borrowed-books report surround the catalog in a clean, neutral interface; the alert clearly communicates the borrowing limit.](/Users/elenescu/Desktop/Screenshot 2026-10-16 alle 17.35.55.png)
+![Library catalog screen showing four book listings: Quando, Tudo é Rio, Suicidas, and Dias Perfeitos, with author, ISBN, copy counts, and loan controls. A blue alert reads O membro Julia já atingiu o limite máximo de 3 empréstimos ativos simultâneos. Tudo é Rio has no available copies and a yellow Reservar Livro button. The surrounding interface includes a search bar, Dashboard and Painel Admin buttons, and a most-borrowed-books report. The clean, neutral layout presents the borrowing-limit notice clearly.](image-1.png)
 
 - **Workflow**: If a member attempts to check out a 4th book, Django displays a flash error message (`messages.error`). The loan history view presents visual badges (`Active`, `Returned`, or `Overdue`) and displays accrued late fines automatically.
 
@@ -90,7 +90,7 @@ Below is the step-by-step application flow alongside corresponding interface scr
 > *Tailored admin panel featuring embedded loan records inside member detail pages.*
 
 
-![Django administration dashboard in a dark interface. The heading reads Site administration. Sections list Authentication and Authorization, with Groups and Users, and Biblioteca, with Authors, Emprestimos, Livros, Membros, and Reservas; each item has Add and Change links. A Recent actions panel lists Julia borrowing Tudo é Rio and Suicidas, followed by recent entries for Julia, Dias Perfeitos, Suicidas, Raphael Montes, Quando, Tudo é Rio, and Carla Madeira. The top bar reads Django administration and includes Welcome, View site, Change password, and Log out. The organized, utilitarian interface contains no people.](/Users/elenescu/Desktop/Screenshot 2026-10-16 alle 15.25.44.png)
+![Django administration dashboard in a dark-themed, orderly administrative interface. The heading reads Site administration. Authentication and Authorization lists Groups and Users; Biblioteca lists Authors, Emprestimos, Livros, Membros, and Reservas, each with Add and Change links. A Recent actions panel shows Julia borrowing Tudo é Rio and Suicidas, followed by entries for Julia, Dias Perfeitos, Suicidas, Raphael Montes, Quando, Tudo é Rio, and Carla Madeira. The top bar reads Django administration and includes Welcome, View site, Change password, and Log out. The screen presents a practical, organized workspace.]![alt text](image-3.png)  
 
 - **Workflow**: Using `EmprestimoInline`, administrators can view and manage borrowing records directly within the member editing interface without switching pages.
 
