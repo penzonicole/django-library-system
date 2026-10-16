@@ -60,7 +60,7 @@ Below is the step-by-step application flow alongside corresponding interface scr
 ### **1. Book Catalog & Real-Time Search (`lista_livros.html`)**
 > *Real-time search by title, author name, or ISBN, displaying stock availability and popular titles ranking.*
 
-![Book Catalog Page](image-2.png)
+![Book catalog page showing a searchable list of books with titles, author names, ISBNs, and available-copy counts. The catalog presents book records in a library management interface; no prominent emotional tone is conveyed.](image-5.png)
 
 - **Workflow**: The search bar evaluates `Q(titulo__icontains=q) | Q(autor__nome__icontains=q) | Q(isbn__icontains=q)`. When available copies reach 0, the "Emprestar" (Checkout) action automatically switches to "Reservar Livro" (Reserve).
 
@@ -69,7 +69,7 @@ Below is the step-by-step application flow alongside corresponding interface scr
 ### **2. Loan Limit Validation & Reader History (`meus_emprestimos.html`)**
 > *Loan checkout interface enforcing a maximum threshold of 3 active loans per member.*
 
-![Loan Limit Validation Warning](image-1.png)
+![Loan history page displaying a warning that the member has reached the limit of three active loans. The warning appears above a list of loan records with status badges and any overdue fines in the library management interface. The visual tone is informational.](image-6.png)
 
 - **Workflow**: If a member attempts to check out a 4th book, Django displays a flash error message (`messages.error`). The loan history view presents visual badges (`Active`, `Returned`, or `Overdue`) and displays accrued late fines automatically via model properties.
 
@@ -87,7 +87,7 @@ Below is the step-by-step application flow alongside corresponding interface scr
 ### **4. Custom Django Admin Interface (`admin.py`)**
 > *Tailored admin panel featuring embedded loan records inside member detail pages.*
 
-![Django Admin Interface](image-3.png)
+![Django administration page showing a member record with embedded loan records in an inline table. The structured admin interface presents borrowing information for management; no prominent emotional tone is conveyed.](image-4.png)
 
 - **Workflow**: Using `EmprestimoInline`, administrators can view and manage borrowing records directly within the member editing interface without switching pages.
 
