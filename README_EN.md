@@ -89,7 +89,7 @@ Below is the step-by-step application flow alongside corresponding interface scr
 ### **4. Custom Django Admin Interface**
 > *Tailored admin panel featuring embedded loan records inside member detail pages.*
 
-<!-- ADD YOUR DJANGO ADMIN SCREENSHOT HERE -->
+
 ![Django administration dashboard in a dark interface. The heading reads Site administration. Sections list Authentication and Authorization, with Groups and Users, and Biblioteca, with Authors, Emprestimos, Livros, Membros, and Reservas; each item has Add and Change links. A Recent actions panel lists Julia borrowing Tudo é Rio and Suicidas, followed by recent entries for Julia, Dias Perfeitos, Suicidas, Raphael Montes, Quando, Tudo é Rio, and Carla Madeira. The top bar reads Django administration and includes Welcome, View site, Change password, and Log out. The organized, utilitarian interface contains no people.](/Users/elenescu/Desktop/Screenshot 2026-10-16 alle 15.25.44.png)
 
 - **Workflow**: Using `EmprestimoInline`, administrators can view and manage borrowing records directly within the member editing interface without switching pages.
