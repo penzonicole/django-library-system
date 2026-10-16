@@ -53,44 +53,41 @@ During development and refactoring, several technical challenges emerged and wer
 
 ---
 
-## 📱 3. Application Workflow & Screenshots
+## 📱 3. Application Workflows & Interface Screenshots
 
 Below is the step-by-step application flow alongside corresponding interface screenshots:
 
-### **1. Book Catalog & Advanced Search**
+### **1. Book Catalog & Real-Time Search (`lista_livros.html`)**
 > *Real-time search by title, author name, or ISBN, displaying stock availability and popular titles ranking.*
 
-<!-- ADD YOUR MAIN CATALOG SCREENSHOT HERE (lista_livros.html) -->
-![Library catalog page with book listings, author and ISBN details, copy availability, and checkout or reservation controls. A search field filters titles, authors, or ISBNs. The clean, neutral library-management interface presents the catalog clearly.](img/![alt text](image-2.png).png800x400)
+![Book Catalog Page](image-2.png)
 
-- **Workflow**: The search bar evaluates `Q(titulo__icontains=q) | Q(autor__nome__icontains=q)`. When available copies reach 0, the "Borrow" action automatically switches to "Reserve Book".
+- **Workflow**: The search bar evaluates `Q(titulo__icontains=q) | Q(autor__nome__icontains=q) | Q(isbn__icontains=q)`. When available copies reach 0, the "Emprestar" (Checkout) action automatically switches to "Reservar Livro" (Reserve).
 
 ---
 
-### **2. Loan Limit Validation & Reader History**
+### **2. Loan Limit Validation & Reader History (`meus_emprestimos.html`)**
 > *Loan checkout interface enforcing a maximum threshold of 3 active loans per member.*
 
-<!-- ADD YOUR LOAN HISTORY OR LIMIT WARNING SCREENSHOT HERE -->
-![Library catalog screen showing four book listings: Quando, Tudo é Rio, Suicidas, and Dias Perfeitos, with author, ISBN, copy counts, and loan controls. A blue alert reads O membro Julia já atingiu o limite máximo de 3 empréstimos ativos simultâneos. Tudo é Rio has no available copies and a yellow Reservar Livro button. The surrounding interface includes a search bar, Dashboard and Painel Admin buttons, and a most-borrowed-books report. The clean, neutral layout presents the borrowing-limit notice clearly.](image-1.png)
+![Loan Limit Validation Warning](image-1.png)
 
-- **Workflow**: If a member attempts to check out a 4th book, Django displays a flash error message (`messages.error`). The loan history view presents visual badges (`Active`, `Returned`, or `Overdue`) and displays accrued late fines automatically.
+- **Workflow**: If a member attempts to check out a 4th book, Django displays a flash error message (`messages.error`). The loan history view presents visual badges (`Active`, `Returned`, or `Overdue`) and displays accrued late fines automatically via model properties.
 
 ---
 
-### **3. Analytics Dashboard with Chart.js**
+### **3. Analytics Dashboard with Chart.js (`dashboard.html`)**
 > *Administrative dashboard displaying metric cards and monthly loan trend charts.*
 
-<!-- ADD YOUR DASHBOARD SCREENSHOT HERE (dashboard.html) -->
-![Library loans dashboard in a clean, light interface. Three summary cards show Total de Livros: 4, Total de Membros: 1, and Total de Empréstimos: 3. Below, a blue monthly loans chart titled Evolução Mensal de Empréstimos shows 3 loans for Oct/2026; a Voltar ao Acervo button appears at the top right. The uncluttered administrative screen has a clear, informative tone.](image.png)
+![Analytics Dashboard](image.png)
+
 - **Workflow**: Powered by Chart.js consuming ORM monthly aggregated queries (`TruncMonth`), giving administrators a visual overview of library activity over time.
 
 ---
 
-### **4. Custom Django Admin Interface**
+### **4. Custom Django Admin Interface (`admin.py`)**
 > *Tailored admin panel featuring embedded loan records inside member detail pages.*
 
-
-![Django administration dashboard in a dark-themed, orderly administrative interface. The heading reads Site administration. Authentication and Authorization lists Groups and Users; Biblioteca lists Authors, Emprestimos, Livros, Membros, and Reservas, each with Add and Change links. A Recent actions panel shows Julia borrowing Tudo é Rio and Suicidas, followed by entries for Julia, Dias Perfeitos, Suicidas, Raphael Montes, Quando, Tudo é Rio, and Carla Madeira. The top bar reads Django administration and includes Welcome, View site, Change password, and Log out. The screen presents a practical, organized workspace.]![alt text](image-3.png)  
+![Django Admin Interface](image-3.png)
 
 - **Workflow**: Using `EmprestimoInline`, administrators can view and manage borrowing records directly within the member editing interface without switching pages.
 
@@ -100,7 +97,7 @@ Below is the step-by-step application flow alongside corresponding interface scr
 
 ```bash
 # 1. Clone the repository
-git clone [https://github.com/penzonicole/django-library-system.git](https://github.com/penzonicole/django-library-system.git)
+git clone https://github.com/penzonicole/django-library-system.git
 cd django-library-system
 
 # 2. Create and activate virtual environment
@@ -119,47 +116,3 @@ python manage.py createsuperuser
 
 # 6. Start development server
 python manage.py runserver 8001
-## 📱 3. Application Workflows & Interface Overview
-
-The system features a responsive, Bootstrap-powered interface designed for both public readers and library administrators. Below is a detailed breakdown of the main application screens and administrative workflows:
-
----
-
-### **1. Book Catalog & Real-Time Search (`lista_livros.html`)**
-The public homepage serves as the primary catalog interface, allowing readers to browse titles and manage stock in real time.
-
-* **Multi-Field Search Bar**: Implements Django ORM `Q` objects (`Q(titulo__icontains=q) | Q(autor__nome__icontains=q) | Q(isbn__icontains=q)`), allowing instant filtering by Book Title, Author Name, or ISBN.
-* **Live Stock Status**: Displays total copies versus available copies for checkout.
-* **Dynamic Action Buttons**:
-  * **"Emprestar" (Checkout)**: Available when stock is greater than zero (`copias_disponiveis > 0`).
-  * **"Reservar Livro" (Reserve)**: Dynamically replaces the checkout button when available stock reaches zero (`copias_disponiveis == 0`), placing the user into a priority waitlist queue.
-* **Popular Titles Ranking**: An embedded panel listing top-borrowed books powered by Django ORM aggregation: `.annotate(total_loans=Count('emprestimo')).order_by('-total_loans')[:5]`.
-
----
-
-### **2. Member Loans & Dynamic Fines (`meus_emprestimos.html`)**
-A dedicated dashboard for members to track active and past borrowing activity.
-
-* **Loan Limit Enforcement**: Enforces a strict threshold of **maximum 3 active loans** per member. Attempting to check out a 4th title triggers an automated error alert (`messages.error`).
-* **Visual Status Badges**:
-  * 🟢 **Ativo (Active)**: Currently borrowed within the valid loan period.
-  * 🔴 **Atrasado (Overdue)**: Loan period expired without return.
-  * ⚪ **Devolvido (Returned)**: Item successfully returned to library inventory.
-* **Dynamic Late Fine Calculation**: For overdue items, the table dynamically displays accumulated late penalties calculated at **R$ 2.00 per overdue day** via the `@property def valor_multa(self)` method in the `Emprestimo` model.
-
----
-
-### **3. Analytics Dashboard & Charts (`dashboard.html`)**
-An executive reporting screen designed for library managers to track key performance metrics and trends.
-
-* **Metric Cards**: Quick summary metrics showing total registered members, active loans, pending reservations, and total accrued fines.
-* **Chart.js Monthly Trends**: An interactive bar/line chart displaying monthly loan counts, generated using Django ORM date truncation (`TruncMonth('data_emprestimo')`) and count aggregation (`Count('id')`).
-* **Inventory Overview**: A visual breakdown comparing total book inventory against currently checked-out copies.
-
----
-
-### **4. Custom Django Admin Panel (`admin.py`)**
-An optimized backend interface tailored for library staff and system administrators.
-
-* **`TabularInline` Member Loans**: Embedded `EmprestimoInline` within the `MembroAdmin` detail view, allowing staff to view, create, or update a member's loan history directly on their profile page without navigating away.
-* **Custom List Display & Filters**: Optimized Django Admin list views with custom filters for loan status (`ATIVO`, `DEVOLVIDO`, `ATRASADO`), search bars for author/member lookup, and quick action links.
